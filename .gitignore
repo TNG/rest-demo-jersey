@@ -1,0 +1,25 @@
+# -- Maven
+/target
+/*.versionsBackup
+
+# -- Gradle
+/.gradle
+/build
+
+# -- Eclipse
+/.classpath
+/.project
+/.settings
+/bin
+
+# -- IntelliJ IDEA
+/.idea
+/*.iml
+/*.ipr
+/*.iws
+
+# -- Mac OS
+.DS_Store
+
+# -- Java
+hs_err_pid*
