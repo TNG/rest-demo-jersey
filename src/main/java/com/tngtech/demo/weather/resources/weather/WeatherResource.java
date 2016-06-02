@@ -9,7 +9,6 @@ import com.tngtech.demo.weather.repositories.WeatherDataRepository;
 import com.tngtech.demo.weather.resources.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
@@ -21,13 +20,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-import static com.tngtech.demo.weather.resources.Paths.STATISTICS;
 import static com.tngtech.demo.weather.resources.Paths.RADIUS;
-import static com.tngtech.demo.weather.resources.Paths.STATION_NAME;
+import static com.tngtech.demo.weather.resources.Paths.STATION_ID;
+import static com.tngtech.demo.weather.resources.Paths.STATISTICS;
 
 /**
  * A REST implementation of the WeatherCollector API. Accessible only to station
@@ -51,9 +50,9 @@ public class WeatherResource implements JerseyResource {
     @Path("/{" + Paths.LATITUDE + "}/{" + Paths.LONGITUDE + "}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<AtmosphericData> queryWeatherByLocation(@PathParam(Paths.LATITUDE) Double latitude,
-                                              @PathParam(Paths.LONGITUDE) Double longitude,
-                                              @DefaultValue("250.0")
-                                              @QueryParam(Paths.RADIUS) Double radius) {
+                                                        @PathParam(Paths.LONGITUDE) Double longitude,
+                                                        @DefaultValue("250.0")
+                                                        @QueryParam(Paths.RADIUS) Double radius) {
         Location location = Location.builder().latitude(latitude).longitude(longitude).build();
         javaslang.collection.List<AtmosphericData> atmosphericDatas = handler.queryWeather(location, radius);
         return atmosphericDatas.toJavaList();
@@ -63,22 +62,22 @@ public class WeatherResource implements JerseyResource {
      * Update the airports atmospheric information for a particular pointType with
      * json formatted data point information.
      *
-     * @param stationName      the station name
-     * @param dataPoint     data structure containing point type and mean, first, second, third and count values
+     * @param stationId the station name
+     * @param dataPoint data structure containing point type and mean, first, second, third and count values
      * @return HTTP Response code
      */
     @POST
-    @Path("/{" + Paths.STATION_NAME + "}")
-    public Response updateWeather(@PathParam(Paths.STATION_NAME) String stationName,
+    @Path("/{" + Paths.STATION_ID + "}")
+    public Response updateWeather(@PathParam(Paths.STATION_ID) UUID stationId,
                                   DataPoint dataPoint) {
 
-        if (stationRepository.getStationByName(stationName).isEmpty()) {
-            log.debug("updateWeather({}, {}, {}) not accepted", stationName, dataPoint);
+        if (stationRepository.getStationById(stationId).isEmpty()) {
+            log.debug("updateWeather({}, {}, {}) not accepted", stationId, dataPoint);
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
-        log.debug("updateWeather({}, {}, {})", stationName, dataPoint);
+        log.debug("updateWeather({}, {}, {})", stationId, dataPoint);
 
-        weatherDataRepository.update(stationName, dataPoint);
+        weatherDataRepository.update(stationId, dataPoint);
 
         return Response.status(Response.Status.OK).build();
     }
@@ -88,21 +87,21 @@ public class WeatherResource implements JerseyResource {
      * Retrieve the most up to date atmospheric information from the given station and other airports in the given
      * radius.
      *
-     * @param stationName     the station name
-     * @param radius the radius, in km, from which to collect weather data
+     * @param stationId the station name
+     * @param radius    the radius, in km, from which to collect weather data
      * @return an HTTP Response and a list of {@link AtmosphericData} from the requested station and
      * stations in the given radius
      */
     @GET
-    @Path("/{" + STATION_NAME + "}")
+    @Path("/{" + STATION_ID + "}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<AtmosphericData> queryWeatherByStationName(@PathParam(STATION_NAME) String stationName,
-                                              @QueryParam(RADIUS) @DefaultValue("0.0") Double radius) {
-        log.debug("weather({}, {})", stationName, radius);
+    public List<AtmosphericData> queryWeatherByStation(@PathParam(STATION_ID) UUID stationId,
+                                                       @QueryParam(RADIUS) @DefaultValue("0.0") Double radius) {
+        log.debug("weather({}, {})", stationId, radius);
 
         radius = radius == null ? 0.0 : radius;
 
-        return handler.queryWeather(stationName, radius).toJavaList();
+        return handler.queryWeather(stationId, radius).toJavaList();
     }
 
     /**

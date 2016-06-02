@@ -4,9 +4,8 @@ import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
 import com.tngtech.demo.weather.WeatherServer;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.repositories.StationRepository;
-import com.tngtech.demo.weather.resources.stations.StationsResource;
-import javaslang.control.Option;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,20 +39,19 @@ public class StationsResourceIntegrationTest {
 
     @Test
     public void getStationsShouldReturnListOfStations() {
-        stationRepository.addStation(Station.builder().name("FOO").latitude(49.0).longitude(11.0).build());
-        PaginatedResponse<Station> response = stationsResource.getStations(0, 1000);
+        stationRepository.addStation(WithId.create(Station.builder().name("FOO").latitude(49.0).longitude(11.0).build()));
+        PaginatedResponse<WithId<Station>> response = stationsResource.getStations(0, 1000);
 
         assertThat(response.object).isNotNull();
 
-        assertThat(response.object.members).extracting("object").extracting("name").contains("FOO");
+        assertThat(response.object.members).extracting("object").extracting("object").extracting("name").contains("FOO");
     }
 
     @Test
     public void gettingExistingStationReturnsData() {
-        Station newStation = Station.builder().name("FOO").latitude(49.0).longitude(11.0).build();
-        stationsResource.addStation(newStation);
+        ObjectWithSchema<WithId<Station>> newStation = stationsResource.addStation(Station.builder().name("FOO").latitude(49.0).longitude(11.0).build());
 
-        Station station = stationRepository.getStationByName("FOO").get();
+        Station station = stationRepository.getStationById(newStation.object.id).get().object;
         assertThat(station).isNotNull();
 
         assertThat(station.name).isEqualTo("FOO");

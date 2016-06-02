@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 class WeatherHandler {
@@ -29,7 +30,7 @@ class WeatherHandler {
     private GeoCalculations geoCalculations;
 
     @Inject
-    private EventCounter<String> requestFrequency;
+    private EventCounter<UUID> requestFrequency;
 
     @Inject
     private EventCounter<Double> radiusFrequency;
@@ -50,32 +51,32 @@ class WeatherHandler {
     }
 
     /**
-     * Retrieve the most up to date atmospheric information from the given stationName and other airports in the given
+     * Retrieve the most up to date atmospheric information from the given stationId and other airports in the given
      * radius.
      *
-     * @param stationName the three letter stationName code
-     * @param radius      the radius, in km, from which to collect weather data
-     * @return an HTTP Response and a list of {@link AtmosphericData} from the requested stationName and
+     * @param stationId the three letter stationId code
+     * @param radius    the radius, in km, from which to collect weather data
+     * @return an HTTP Response and a list of {@link AtmosphericData} from the requested stationId and
      * airports in the given radius
      */
-    List<AtmosphericData> queryWeather(String stationName, Double radius) {
+    List<AtmosphericData> queryWeather(UUID stationId, Double radius) {
 
-        updateRequestFrequency(stationName, radius);
+        updateRequestFrequency(stationId, radius);
 
         List<AtmosphericData> retval;
         if (radius == 0) {
             return weatherDataRepository
-                    .getWeatherDataFor(stationName)
+                    .getWeatherDataFor(stationId)
                     .toList();
         } else {
             return stationRepository
-                    .getStationByName(stationName)
+                    .getStationById(stationId)
                     .toList()
                     .flatMap(centerStation -> stationRepository
                             .getStations()
                             .filter(otherStation -> geoCalculations
-                                    .calculateDistance(otherStation, centerStation) <= radius)
-                            .map(station -> station.name)
+                                    .calculateDistance(otherStation.object, centerStation.object) <= radius)
+                            .map(station -> station.id)
                             .flatMap(weatherDataRepository::getWeatherDataFor)
                             .toList());
         }
@@ -93,10 +94,10 @@ class WeatherHandler {
                 .count(data -> data.lastUpdateTime > oneDayAgo);
     }
 
-    private Map<String, Double> getStationFractions() {
-        Map<String, Double> freq = new HashMap<>();
-        stationRepository.getStations().map(station -> station.name).forEach(stationName ->
-                freq.put(stationName, requestFrequency.fractionOf(stationName))
+    private Map<UUID, Double> getStationFractions() {
+        Map<UUID, Double> freq = new HashMap<>();
+        stationRepository.getStations().map(station -> station.id).forEach(stationId ->
+                freq.put(stationId, requestFrequency.fractionOf(stationId))
         );
         return freq;
     }
@@ -123,11 +124,11 @@ class WeatherHandler {
         return hist;
     }
 
-    private void updateRequestFrequency(String stationName, Double radius) {
+    private void updateRequestFrequency(UUID stationId, Double radius) {
         stationRepository
-                .getStationByName(stationName)
+                .getStationById(stationId)
                 .forEach(station -> {
-                            requestFrequency.increment(station.name);
+                            requestFrequency.increment(station.id);
                             radiusFrequency.increment(radius);
                         }
                 );

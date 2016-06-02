@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Link;
 import java.util.List;
+import java.util.UUID;
 
 import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
 
@@ -25,10 +26,10 @@ public class WeatherLinkCreator {
         );
     }
 
-    public List<Link> createForStationName(String stationName) {
+    public List<Link> createForStation(UUID stationId) {
         return collect(
-                weatherLinkFactory.forCall(WeatherRel.QUERY, r -> r.queryWeatherByStationName(stationName, null)),
-                weatherLinkFactory.forCall(WeatherRel.UPDATE, r -> r.updateWeather(stationName, null))
+                weatherLinkFactory.forCall(WeatherRel.QUERY, r -> r.queryWeatherByStation(stationId, null)),
+                weatherLinkFactory.forCall(WeatherRel.UPDATE, r -> r.updateWeather(stationId, null))
         );
     }
 }

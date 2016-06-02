@@ -1,47 +1,43 @@
 package com.tngtech.demo.weather.repositories;
 
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import javaslang.collection.Stream;
 import javaslang.control.Option;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class StationRepository {
-    private final ConcurrentHashMap<String, Station> stationsByName = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, Station> stationsById = new ConcurrentHashMap<>();
 
-    public void addStation(Station newStation) {
-        stationsByName.put(newStation.name, newStation);
+    public void addStation(WithId<Station> newStation) {
+        stationsById.put(newStation.id, newStation.object);
     }
 
-    public Option<Station> getStationByName(String stationName) {
-        return Option.of(stationsByName.get(stationName));
+    public Option<WithId<Station>> getStationById(UUID stationId) {
+        return Option.of(stationsById.get(stationId))
+                .map(station -> WithId.create(stationId, station));
     }
 
-    public Stream<Station> getStations() {
+    public Stream<WithId<Station>> getStations() {
         return getStations(0, Integer.MAX_VALUE);
     }
 
-    public Stream<Station> getStations(final Integer offset, final Integer limit) {
-        return Stream.ofAll(stationsByName.values()).drop(offset).take(limit);
+    public Stream<WithId<Station>> getStations(final Integer offset, final Integer limit) {
+        return Stream.ofAll(stationsById.entrySet())
+                .drop(offset)
+                .take(limit)
+                .map(WithId::create);
     }
 
-    public void removeStation(String name) {
-        stationsByName.remove(name);
-    }
-
-    public void addStation(String name, Double latitude, Double longitude) {
-        final Station station = Station.builder()
-                .name(name)
-                .latitude(latitude)
-                .longitude(longitude)
-                .build();
-
-        addStation(station);
+    public void removeStation(UUID stationId) {
+        stationsById.remove(stationId);
     }
 
     public Long getTotalCount() {
-        return stationsByName.mappingCount();
+        return stationsById.mappingCount();
     }
 }

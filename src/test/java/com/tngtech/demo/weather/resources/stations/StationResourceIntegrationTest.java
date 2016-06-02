@@ -3,10 +3,8 @@ package com.tngtech.demo.weather.resources.stations;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.tngtech.demo.weather.WeatherServer;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.repositories.StationRepository;
-import com.tngtech.demo.weather.resources.RootResource;
-import com.tngtech.demo.weather.resources.stations.StationResource;
-import com.tngtech.demo.weather.resources.stations.StationsResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,16 +42,19 @@ public class StationResourceIntegrationTest {
 
     @Test
     public void gettigNonExistentStationReturns404() throws Exception {
-        assertThatThrownBy(() -> stationResource.getStation("FOO")).isInstanceOf(NotFoundException.class).hasMessage("Station with name 'FOO' was not found");
+        UUID stationId = UUID.randomUUID();
+        assertThatThrownBy(() -> {
+            stationResource.getStation(stationId);
+        }).isInstanceOf(NotFoundException.class).hasMessage("Station with id " + stationId + " was not found");
     }
 
     @Test
     public void gettingExistingStationReturnsData() {
-        Station newStation = Station.builder().name("FOO").latitude(49.0).longitude(11.0).build();
+        WithId<Station> newStation = WithId.create(Station.builder().name("FOO").latitude(49.0).longitude(11.0).build());
         stationRepository.addStation(newStation);
 
-        ObjectWithSchema<Station> response = stationResource.getStation("FOO");
-        Station station = response.object;
+        ObjectWithSchema<WithId<Station>> response = stationResource.getStation(newStation.id);
+        Station station = response.object.object;
 
         assertThat(station).isNotNull();
 
@@ -63,23 +65,24 @@ public class StationResourceIntegrationTest {
 
     @Test
     public void removingExistingStationShouldWork() {
-        Station newStation = Station.builder().name("FOO").latitude(49.0).longitude(11.0).build();
+        WithId<Station> newStation = WithId.create(Station.builder().name("FOO").latitude(49.0).longitude(11.0).build());
         stationRepository.addStation(newStation);
 
-        Response response = stationResource.deleteStation("FOO");
+        Response response = stationResource.deleteStation(newStation.id);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
-        assertThatThrownBy(() -> stationResource.getStation("FOO")).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> stationResource.getStation(newStation.id)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
     public void removingNonExistingStationShouldWork() {
-        Response response = stationResource.deleteStation("FOO");
+        UUID nonExistentStationId = UUID.randomUUID();
+        Response response = stationResource.deleteStation(nonExistentStationId);
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.NO_CONTENT.getStatusCode());
 
-        assertThatThrownBy(() -> stationResource.getStation("FOO")).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> stationResource.getStation(nonExistentStationId)).isInstanceOf(NotFoundException.class);
     }
 
 }

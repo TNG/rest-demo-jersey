@@ -6,7 +6,7 @@ public class Paths {
     public static final String WEATHER = "/weather";
     public static final String STATISTICS = "/statistics";
 
-    public static final String STATION_NAME = "stationName";
+    public static final String STATION_ID = "stationId";
     public static final String LIMIT = "limit";
     public static final String OFFSET = "offset";
     public static final String LONGITUDE = "longitude";

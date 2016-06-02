@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Link;
 import java.util.List;
+import java.util.UUID;
 
 import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
 
@@ -18,10 +19,10 @@ public class StationLinkCreator {
     @Named("stationLinkFactory")
     private LinkFactory<StationResource> stationLinkFactory;
 
-    public List<Link> createForName(String stationName) {
+    public List<Link> createFor(UUID stationId) {
         return collect(
-                stationLinkFactory.forCall(Rel.SELF, r -> r.getStation(stationName)),
-                stationLinkFactory.forCall(Rel.DELETE, r -> r.deleteStation(stationName))
+                stationLinkFactory.forCall(Rel.SELF, r -> r.getStation(stationId)),
+                stationLinkFactory.forCall(Rel.DELETE, r -> r.deleteStation(stationId))
         );
     }
 }

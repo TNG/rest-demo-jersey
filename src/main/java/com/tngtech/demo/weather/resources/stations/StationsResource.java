@@ -4,10 +4,12 @@ import com.mercateo.common.rest.schemagen.JerseyResource;
 import com.mercateo.common.rest.schemagen.link.LinkFactory;
 import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
 import com.mercateo.common.rest.schemagen.link.relation.Rel;
+import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.mercateo.common.rest.schemagen.types.PaginatedList;
 import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
 import com.mercateo.common.rest.schemagen.types.PaginatedResponseBuilderCreator;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.resources.Paths;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -25,8 +28,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
+import java.util.UUID;
 
 @Path(Paths.STATIONS)
 public class StationsResource implements JerseyResource {
@@ -55,7 +58,7 @@ public class StationsResource implements JerseyResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public PaginatedResponse<Station> getStations(@QueryParam(Paths.OFFSET) @DefaultValue("0") Integer offset,
+    public PaginatedResponse<WithId<Station>> getStations(@QueryParam(Paths.OFFSET) @DefaultValue("0") Integer offset,
                                                   @QueryParam(Paths.LIMIT) @DefaultValue("100") Integer limit) {
         log.debug("getStations({}, {})", offset, limit);
         offset = offset == null ? 0 : offset;
@@ -63,7 +66,7 @@ public class StationsResource implements JerseyResource {
 
         LinkFactory<StationsResource> stationsLinkFactory = linkMetaFactory.createFactoryFor(StationsResource.class);
 
-        return responseBuilderCreator.<Station, Station>builder()
+        return responseBuilderCreator.<WithId<Station>, WithId<Station>>builder()
                 .withList(new PaginatedList<>(
                         stationRepository.getTotalCount().intValue(),
                         offset,
@@ -74,7 +77,7 @@ public class StationsResource implements JerseyResource {
                 .withContainerLinks(
                         create(stationsLinkFactory))
                 .withElementMapper(station ->
-                        hyperSchemaCreator.create(station, stationLinkCreator.createForName(station.name)))
+                        hyperSchemaCreator.create(station, stationLinkCreator.createFor(station.id)))
                 .build();
     }
 
@@ -90,19 +93,16 @@ public class StationsResource implements JerseyResource {
      */
     @POST
     @RolesAllowed(Roles.ADMIN)
-    public Response addStation(Station station) {
-        if (stationRepository.getStationByName(station.name).isDefined()) {
-            log.debug("addStation({}, {}, {}) already exists", station.name, station.latitude(), station.longitude());
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+    public ObjectWithSchema<WithId<Station>> addStation(Station station) {
         log.debug("addStation({}, {}, {})", station.name, station.latitude(), station.longitude());
 
-        stationRepository.addStation(station);
+        WithId<Station> stationWithId = WithId.create(station);
+        stationRepository.addStation(stationWithId);
 
-        return Response.status(Response.Status.OK).build();
+        return hyperSchemaCreator.create(stationWithId, stationLinkCreator.createFor(stationWithId.id));
     }
 
-    @Path("/{" + Paths.STATION_NAME + "}")
+    @Path("/{" + Paths.STATION_ID + "}")
     public Class<StationResource> stationSubResource() {
         log.trace("stationSubResource()");
         return StationResource.class;

@@ -3,6 +3,7 @@ package com.tngtech.demo.weather.resources;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.tngtech.demo.weather.WeatherServer;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.domain.measurement.AtmosphericData;
 import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.domain.measurement.DataPointType;
@@ -43,10 +44,10 @@ public class RootResourceIntegrationTest {
         rootResource = new RootResource();
                 autowireBeanFactory.autowireBean(rootResource);
 
-        stationRepository.addStation(Station.builder().name("BOS").latitude(49.0).longitude(11.0).build());
-        stationRepository.addStation(Station.builder().name("JFK").latitude(49.0).longitude(11.0).build());
-        stationRepository.addStation(Station.builder().name("EWR").latitude(49.0).longitude(11.0).build());
-        stationRepository.addStation(Station.builder().name("LGA").latitude(55.0).longitude(11.0).build());
+        stationRepository.addStation(WithId.create(Station.builder().name("ABC").latitude(49.0).longitude(11.0).build()));
+        stationRepository.addStation(WithId.create(Station.builder().name("DEF").latitude(49.0).longitude(11.0).build()));
+        stationRepository.addStation(WithId.create(Station.builder().name("GHI").latitude(49.0).longitude(11.0).build()));
+        stationRepository.addStation(WithId.create(Station.builder().name("JKL").latitude(55.0).longitude(11.0).build()));
     }
 
     @Test

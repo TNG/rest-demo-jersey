@@ -3,6 +3,7 @@ package com.tngtech.demo.weather.resources.stations;
 import com.mercateo.common.rest.schemagen.JerseyResource;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.repositories.WeatherDataRepository;
@@ -20,8 +21,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.UUID;
 
-import static com.tngtech.demo.weather.resources.Paths.STATION_NAME;
+import static com.tngtech.demo.weather.resources.Paths.STATION_ID;
 
 public class StationResource implements JerseyResource {
 
@@ -45,39 +47,39 @@ public class StationResource implements JerseyResource {
     /**
      * Retrieve station data, including latitude and longitude for a particular station
      *
-     * @param stationName the station name
+     * @param stationId the station name
      * @return an HTTP Response with a json representation of {@link Station}
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ObjectWithSchema<Station> getStation(@PathParam(STATION_NAME) String stationName) {
-        log.debug("getStation('{})'", stationName);
+    public ObjectWithSchema<WithId<Station>> getStation(@PathParam(STATION_ID) UUID stationId) {
+        log.debug("getStation('{})'", stationId);
 
-        return stationRepository.getStationByName(stationName)
+        return stationRepository.getStationById(stationId)
                 .map(station ->
                         hyperSchemaCreator.create(
                                 station,
-                                stationLinkCreator.createForName(station.name),
-                                weatherLinkCreator.createForStationName(station.name)
+                                stationLinkCreator.createFor(station.id),
+                                weatherLinkCreator.createForStation(station.id)
                         )
                 ).getOrElseThrow(() ->
-                        new NotFoundException("Station with name '" + stationName + "' was not found"));
+                        new NotFoundException("Station with id " + stationId + " was not found"));
     }
 
 
     /**
      * Remove an station from the known station list
      *
-     * @param stationName the station name
+     * @param stationId the station name
      * @return HTTP Repsonse code for the delete operation
      */
     @DELETE
     @RolesAllowed(Roles.ADMIN)
-    public Response deleteStation(@PathParam(STATION_NAME) String stationName) {
-        log.debug("deleteStation({})", stationName);
+    public Response deleteStation(@PathParam(STATION_ID) UUID stationId) {
+        log.debug("deleteStation({})", stationId);
 
-        stationRepository.removeStation(stationName);
-        weatherDataRepository.removeStation(stationName);
+        stationRepository.removeStation(stationId);
+        weatherDataRepository.removeStation(stationId);
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }

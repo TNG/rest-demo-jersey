@@ -9,12 +9,13 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class WeatherDataRepository {
 
-    private final ConcurrentHashMap<String, StationDataRepository> stationDataRepositoryByStationId = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, StationDataRepository> stationDataRepositoryByStationId = new ConcurrentHashMap<>();
 
     @Inject
     private Provider<StationDataRepository> stationDataRepositoryProvider;
@@ -24,7 +25,7 @@ public class WeatherDataRepository {
      *  @param stationId id which is used to reference the station
      * @param data      data to be updated
      */
-    public void update(String stationId, DataPoint data) {
+    public void update(UUID stationId, DataPoint data) {
         stationDataRepositoryByStationId
                 .computeIfAbsent(stationId, k -> stationDataRepositoryProvider.get())
                 .update(data);
@@ -35,12 +36,12 @@ public class WeatherDataRepository {
                 .map(StationDataRepository::toData);
     }
 
-    public Option<AtmosphericData> getWeatherDataFor(String stationId) {
+    public Option<AtmosphericData> getWeatherDataFor(UUID stationId) {
         return Option.of(stationDataRepositoryByStationId.get(stationId))
                 .map(StationDataRepository::toData);
     }
 
-    public void removeStation(String stationId) {
+    public void removeStation(UUID stationId) {
         stationDataRepositoryByStationId.remove(stationId);
     }
 }

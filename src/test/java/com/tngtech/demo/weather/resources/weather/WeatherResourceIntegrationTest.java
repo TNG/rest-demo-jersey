@@ -2,6 +2,7 @@ package com.tngtech.demo.weather.resources.weather;
 
 import com.tngtech.demo.weather.WeatherServer;
 import com.tngtech.demo.weather.domain.Station;
+import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.domain.measurement.AtmosphericData;
 import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.domain.measurement.DataPointType;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,47 +37,56 @@ public class WeatherResourceIntegrationTest {
 
     @Inject
     private AutowireCapableBeanFactory autowireBeanFactory;
+    private WithId<Station> station1;
+    private WithId<Station> station2;
+    private WithId<Station> station3;
+    private WithId<Station> station4;
 
     @Before
     public void setUp() throws Exception {
         weatherResource = new WeatherResource();
         autowireBeanFactory.autowireBean(weatherResource);
 
-        stationRepository.addStation(Station.builder().name("ABC").latitude(49.0).longitude(11.0).build());
-        stationRepository.addStation(Station.builder().name("DEF").latitude(50.0).longitude(10.0).build());
-        stationRepository.addStation(Station.builder().name("GHI").latitude(51.0).longitude(12.0).build());
-        stationRepository.addStation(Station.builder().name("JKL").latitude(55.0).longitude(13.0).build());
+        station1 = WithId.create(Station.builder().name("ABC").latitude(49.0).longitude(11.0).build());
+        stationRepository.addStation(station1);
+        station2 = WithId.create(Station.builder().name("DEF").latitude(50.0).longitude(10.0).build());
+        stationRepository.addStation(station2);
+        station3 = WithId.create(Station.builder().name("GHI").latitude(51.0).longitude(12.0).build());
+        stationRepository.addStation(station3);
+        station4 = WithId.create(Station.builder().name("JKL").latitude(55.0).longitude(13.0).build());
+        stationRepository.addStation(station4);
 
         dataPoint = DataPoint.builder()
                 .type(DataPointType.WIND)
                 .count(10).first(10).median(20).last(30).mean(22).build();
-        weatherResource.updateWeather("ABC", dataPoint);
-        weatherResource.queryWeatherByStationName("ABC", null);
+        weatherResource.updateWeather(station1.id, dataPoint);
+        weatherResource.queryWeatherByStation(station1.id, null);
     }
 
     @Test
     public void pingShouldReturnDatasizeAndIataFreqInformation() throws Exception {
         Map<String, Object> ping = weatherResource.getStatistics();
         assertThat(ping.get("datasize")).isEqualTo(1);
-        assertThat(((Map<String, Double>) ping.get("station_freq")).entrySet()).hasSize(4);
+        assertThat(((Map<UUID, Double>) ping.get("station_freq")).entrySet()).hasSize(4);
     }
 
     @Test
     public void weatherQueryShouldReturnPreviouslyUploadedData() throws Exception {
-        List<AtmosphericData> ais = weatherResource.queryWeatherByStationName("ABC", null);
+        List<AtmosphericData> ais = weatherResource.queryWeatherByStation(station1.id, null);
         assertThat(ais.get(0).wind).isEqualTo(dataPoint);
     }
 
     @Test
     public void weatherQueryWithIncludingNearbyRadiusShouldReturnMultipleResults() throws Exception {
         // check datasize response
-        weatherResource.updateWeather("DEF", dataPoint);
-        dataPoint = dataPoint.toBuilder().mean(40).build();
-        weatherResource.updateWeather("GHI", dataPoint);
-        dataPoint = dataPoint.toBuilder().mean(30).build();
-        weatherResource.updateWeather("JKL", dataPoint);
 
-        List<AtmosphericData> ais = weatherResource.queryWeatherByStationName("DEF", 300.0);
+        weatherResource.updateWeather(station2.id, dataPoint);
+        dataPoint = dataPoint.toBuilder().mean(40).build();
+        weatherResource.updateWeather(station3.id, dataPoint);
+        dataPoint = dataPoint.toBuilder().mean(30).build();
+        weatherResource.updateWeather(station4.id, dataPoint);
+
+        List<AtmosphericData> ais = weatherResource.queryWeatherByStation(station2.id, 300.0);
         assertThat(ais).hasSize(3);
     }
 
@@ -84,8 +95,8 @@ public class WeatherResourceIntegrationTest {
         DataPoint windDp = DataPoint.builder()
                 .type(DataPointType.WIND)
                 .count(10).first(10).median(20).last(30).mean(22).build();
-        weatherResource.updateWeather("ABC", windDp);
-        weatherResource.queryWeatherByStationName("ABC", null);
+        weatherResource.updateWeather(station1.id, windDp);
+        weatherResource.queryWeatherByStation(station1.id, null);
 
         Map<String, Object> ping = weatherResource.getStatistics();
         assertThat(ping.get("datasize")).isEqualTo(1);
@@ -93,16 +104,17 @@ public class WeatherResourceIntegrationTest {
         DataPoint cloudCoverDp = DataPoint.builder()
                 .type(DataPointType.CLOUDCOVER)
                 .count(4).first(10).median(60).last(100).mean(50).build();
-        weatherResource.updateWeather("ABC", cloudCoverDp);
+        weatherResource.updateWeather(station1.id, cloudCoverDp);
 
-        List<AtmosphericData> ais = weatherResource.queryWeatherByStationName("ABC", null);
+        List<AtmosphericData> ais = weatherResource.queryWeatherByStation(station1.id, null);
         assertThat(ais.get(0).wind).isEqualTo(windDp);
         assertThat(ais.get(0).cloudCover).isEqualTo(cloudCoverDp);
     }
 
     @Test
     public void addingWeatherForNonExistentStationReturns406() throws Exception {
-        Response response = weatherResource.updateWeather("FOO", null);
+        UUID stationId = UUID.randomUUID();
+        Response response = weatherResource.updateWeather(stationId, null);
         assertThat(response.getStatus()).isEqualTo(406);
     }
 

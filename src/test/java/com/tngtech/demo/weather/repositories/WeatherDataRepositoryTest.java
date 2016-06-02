@@ -13,6 +13,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.inject.Provider;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -42,14 +44,15 @@ public class WeatherDataRepositoryTest {
 
     @Test
     public void returnsEmptyElementAfterInitialization() {
-        assertThat(weatherDataRepository.getWeatherDataFor("foo")).isEmpty();
+        assertThat(weatherDataRepository.getWeatherDataFor(UUID.randomUUID())).isEmpty();
     }
 
     @Test
     public void shouldCreateDataRepositoryAndAddNewDataWhenUpdating() {
+        UUID stationId = UUID.randomUUID();
         DataPoint dataPoint = mock(DataPoint.class);
 
-        weatherDataRepository.update("foo", dataPoint);
+        weatherDataRepository.update(stationId, dataPoint);
 
         assertThat(weatherDataRepository.getWeatherData().size()).isEqualTo(1);
         verify(stationDataRepository).update(dataPoint);
@@ -57,11 +60,12 @@ public class WeatherDataRepositoryTest {
 
     @Test
     public void shouldReuseDataRepositoryAndAddNewDataWhenUpdatingAnExistingRepository() {
+        UUID stationId = UUID.randomUUID();
         DataPoint dataPoint1 = DataPoint.builder().type(DataPointType.WIND).mean(5.5).build();
-        weatherDataRepository.update("foo", dataPoint1);
+        weatherDataRepository.update(stationId, dataPoint1);
 
         DataPoint dataPoint2 = DataPoint.builder().type(DataPointType.HUMIDITY).mean(25.5).build();
-        weatherDataRepository.update("foo", dataPoint2);
+        weatherDataRepository.update(stationId, dataPoint2);
 
         assertThat(weatherDataRepository.getWeatherData().size()).isEqualTo(1);
         verify(dataRepositoryProvider).get();
@@ -71,29 +75,32 @@ public class WeatherDataRepositoryTest {
 
     @Test
     public void getWeatherDataForReturnsDataIfStationIsKnown() {
+        UUID stationId = UUID.randomUUID();
         DataPoint dataPoint = mock(DataPoint.class);
-        weatherDataRepository.update("foo", dataPoint);
+        weatherDataRepository.update(stationId, dataPoint);
         AtmosphericData atmosphericData = mock(AtmosphericData.class);
         when(stationDataRepository.toData()).thenReturn(atmosphericData);
 
-        final Option<AtmosphericData> result = weatherDataRepository.getWeatherDataFor("foo");
+        final Option<AtmosphericData> result = weatherDataRepository.getWeatherDataFor(stationId);
 
         assertThat(result).contains(atmosphericData);
     }
 
     @Test
     public void removeStationIgnoresIfStationDoesNotExist() {
-        weatherDataRepository.removeStation("bar");
+        UUID stationId = UUID.randomUUID();
+        weatherDataRepository.removeStation(stationId);
 
         assertThat(weatherDataRepository.getWeatherData().toList()).isEmpty();
     }
 
     @Test
     public void removeStationRemovesExistingStationRepository() {
+        UUID stationId = UUID.randomUUID();
         DataPoint dataPoint = mock(DataPoint.class);
-        weatherDataRepository.update("foo", dataPoint);
+        weatherDataRepository.update(stationId, dataPoint);
 
-        weatherDataRepository.removeStation("foo");
+        weatherDataRepository.removeStation(stationId);
 
         assertThat(weatherDataRepository.getWeatherData().toList()).isEmpty();
     }
