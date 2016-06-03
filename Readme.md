@@ -2,3 +2,25 @@
 Spring-boot and Jersey based REST service showing the integration of [rest-schemagen](http://github.com/Mercateo/rest-schemagen).
 
 <img src="https://rawgit.com/wuan/rest-demo-jersey/master/doc/service.svg" alt="service schematics">
+
+## Example usage
+
+### get base info
+GET: http://localhost:9090
+
+* stations: GET /stations 
+* statistics: GET /weather/statistics 
+* query: GET /weather/49.0/11.0 
+
+### get stations
+GET: http://localhost:9090/stations
+
+* create: POST /stations {u'type': u'object', u'properties': {u'latitude': {u'type': u'number'}, u'name': {u'type': u'string'}, u'longitude': {u'type': u'number'}}}
+* self: GET /stations?offset=0&limit=100 
+
+### create station
+POST: http://localhost:9090/stations
+
+* self: GET /stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
+* delete: DELETE /stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
+    
