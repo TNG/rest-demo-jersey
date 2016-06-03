@@ -93,6 +93,7 @@ public class StationsResource implements JerseyResource {
      */
     @POST
     @RolesAllowed(Roles.ADMIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public ObjectWithSchema<WithId<Station>> addStation(Station station) {
         log.debug("addStation({}, {}, {})", station.name, station.latitude(), station.longitude());
 
