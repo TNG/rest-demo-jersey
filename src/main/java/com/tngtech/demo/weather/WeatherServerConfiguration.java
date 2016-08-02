@@ -1,5 +1,13 @@
 package com.tngtech.demo.weather;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.inject.Named;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.mercateo.common.rest.schemagen.JsonHyperSchemaCreator;
 import com.mercateo.common.rest.schemagen.JsonSchemaGenerator;
 import com.mercateo.common.rest.schemagen.RestJsonSchemaGenerator;
@@ -12,13 +20,6 @@ import com.mercateo.common.rest.schemagen.types.PaginatedResponseBuilderCreator;
 import com.tngtech.demo.weather.resources.stations.StationResource;
 import com.tngtech.demo.weather.resources.stations.StationsResource;
 import com.tngtech.demo.weather.resources.weather.WeatherResource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import javax.inject.Named;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ServiceLoader;
 
 @Configuration
 public class WeatherServerConfiguration {
@@ -30,11 +31,10 @@ public class WeatherServerConfiguration {
 
     @Bean
     public LinkMetaFactory linkMetaFactory(JsonSchemaGenerator jsonSchemaGenerator,
-                                           FieldCheckerForSchema fieldCheckerForSchema,
-                                           MethodCheckerForLink methodCheckerForLink)
+            FieldCheckerForSchema fieldCheckerForSchema, MethodCheckerForLink methodCheckerForLink)
             throws URISyntaxException {
-        return LinkMetaFactory.create(jsonSchemaGenerator, new URI("/"),
-                methodCheckerForLink, fieldCheckerForSchema);
+        return LinkMetaFactory.create(jsonSchemaGenerator, new URI("/"), methodCheckerForLink,
+                fieldCheckerForSchema);
     }
 
     @Bean
@@ -55,8 +55,10 @@ public class WeatherServerConfiguration {
 
     @Bean
     @Named("stationLinkFactory")
-    LinkFactory<StationResource> stationResourceLinkFactory(LinkFactory<StationsResource> stationsResourceLinkFactory) {
-        return stationsResourceLinkFactory.subResource(StationsResource::stationSubResource, StationResource.class);
+    LinkFactory<StationResource> stationResourceLinkFactory(
+            LinkFactory<StationsResource> stationsResourceLinkFactory) {
+        return stationsResourceLinkFactory.subResource(StationsResource::stationSubResource,
+                StationResource.class);
     }
 
     @Bean
