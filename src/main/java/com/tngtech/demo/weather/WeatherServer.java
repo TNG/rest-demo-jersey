@@ -12,9 +12,6 @@ import org.springframework.context.ApplicationListener;
 @ServletComponentScan(basePackages = "com.tngtech.demo.weather")
 public class WeatherServer extends SpringBootServletInitializer {
 
-    @Value("${server.port}")
-    private String serverPort;
-
     public static void main(String[] args) throws Exception {
         SpringApplication.run(WeatherServer.class, args);
     }
