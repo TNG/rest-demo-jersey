@@ -44,8 +44,12 @@ class StationDataRepository {
 
     private long lastUpdateTime = 0L;
 
+    private final TimestampFactory timestampFactory;
+
     @Inject
-    private TimestampFactory timestampFactory;
+    public StationDataRepository(TimestampFactory timestampFactory) {
+        this.timestampFactory = timestampFactory;
+    }
 
     void update(DataPoint data) {
         final Boolean shouldAddData =

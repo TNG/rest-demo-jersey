@@ -15,9 +15,12 @@ import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
 @Component
 public class WeatherLinkCreator {
 
+    private final LinkFactory<WeatherResource> weatherLinkFactory;
+
     @Inject
-    @Named("weatherLinkFactory")
-    private LinkFactory<WeatherResource> weatherLinkFactory;
+    public WeatherLinkCreator(@Named("weatherLinkFactory") LinkFactory<WeatherResource> weatherLinkFactory) {
+        this.weatherLinkFactory = weatherLinkFactory;
+    }
 
     public List<Link> create() {
         return collect(

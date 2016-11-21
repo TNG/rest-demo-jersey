@@ -1,14 +1,18 @@
 package com.tngtech.demo.weather.resources.stations;
 
+import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
+import com.mercateo.common.rest.schemagen.types.PaginatedResponseBuilderCreator;
 import com.tngtech.demo.weather.WeatherServer;
 import com.tngtech.demo.weather.domain.Station;
 import com.tngtech.demo.weather.domain.WithId;
+import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;

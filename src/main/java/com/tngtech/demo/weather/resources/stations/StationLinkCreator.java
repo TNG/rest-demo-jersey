@@ -15,9 +15,12 @@ import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
 @Component
 public class StationLinkCreator {
 
+    private final LinkFactory<StationResource> stationLinkFactory;
+
     @Inject
-    @Named("stationLinkFactory")
-    private LinkFactory<StationResource> stationLinkFactory;
+    public StationLinkCreator(@Named("stationLinkFactory") LinkFactory<StationResource> stationLinkFactory) {
+        this.stationLinkFactory = stationLinkFactory;
+    }
 
     public List<Link> createFor(UUID stationId) {
         return collect(

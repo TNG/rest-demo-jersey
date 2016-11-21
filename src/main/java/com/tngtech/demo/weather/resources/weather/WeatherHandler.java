@@ -20,23 +20,27 @@ class WeatherHandler {
 
     private static final int MILLISECONDS_PER_DAY = 86400000;
 
-    @Inject
-    private WeatherDataRepository weatherDataRepository;
+    private final WeatherDataRepository weatherDataRepository;
+
+    private final StationRepository stationRepository;
+
+    private final GeoCalculations geoCalculations;
+
+    private final EventCounter<UUID> requestFrequency;
+
+    private final EventCounter<Double> radiusFrequency;
+
+    private final TimestampFactory timestampFactory;
 
     @Inject
-    private StationRepository stationRepository;
-
-    @Inject
-    private GeoCalculations geoCalculations;
-
-    @Inject
-    private EventCounter<UUID> requestFrequency;
-
-    @Inject
-    private EventCounter<Double> radiusFrequency;
-
-    @Inject
-    private TimestampFactory timestampFactory;
+    public WeatherHandler(StationRepository stationRepository, WeatherDataRepository weatherDataRepository, TimestampFactory timestampFactory, EventCounter<UUID> requestFrequency, EventCounter<Double> radiusFrequency, GeoCalculations geoCalculations) {
+        this.stationRepository = stationRepository;
+        this.weatherDataRepository = weatherDataRepository;
+        this.timestampFactory = timestampFactory;
+        this.requestFrequency = requestFrequency;
+        this.radiusFrequency = radiusFrequency;
+        this.geoCalculations = geoCalculations;
+    }
 
     Map<String, Object> getStatistics() {
         Map<String, Object> result = new HashMap<>();
@@ -63,7 +67,6 @@ class WeatherHandler {
 
         updateRequestFrequency(stationId, radius);
 
-        List<AtmosphericData> retval;
         if (radius == 0) {
             return weatherDataRepository
                     .getWeatherDataFor(stationId)
@@ -83,6 +86,7 @@ class WeatherHandler {
     }
 
     List<AtmosphericData> queryWeather(Point location, Double radius) {
+        // TODO implement
         return List.empty();
     }
 

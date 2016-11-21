@@ -18,11 +18,15 @@ import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
 @Component
 public class HyperSchemaCreator {
 
-    @Inject
-    private ObjectWithSchemaCreator objectWithSchemaCreator;
+    private final ObjectWithSchemaCreator objectWithSchemaCreator;
+
+    private final JsonHyperSchemaCreator jsonHyperSchemaCreator;
 
     @Inject
-    private JsonHyperSchemaCreator jsonHyperSchemaCreator;
+    public HyperSchemaCreator(ObjectWithSchemaCreator objectWithSchemaCreator, JsonHyperSchemaCreator jsonHyperSchemaCreator) {
+        this.objectWithSchemaCreator = objectWithSchemaCreator;
+        this.jsonHyperSchemaCreator = jsonHyperSchemaCreator;
+    }
 
     @SafeVarargs
     public final <T> ObjectWithSchema<T> create(T object, Optional<Link>... links) {

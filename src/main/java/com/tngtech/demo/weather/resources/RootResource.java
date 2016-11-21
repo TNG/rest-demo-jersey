@@ -25,21 +25,17 @@ import static java.util.Objects.requireNonNull;
 @Api(value = "/", description = "root resource")
 public class RootResource implements JerseyResource {
 
-    private final StationsLinkCreator stationsLinkCreator;
+    @Inject
+    private StationsLinkCreator stationsLinkCreator;
 
-    private final WeatherLinkCreator weatherLinkCreator;
+    @Inject
+    private WeatherLinkCreator weatherLinkCreator;
 
-    private final HyperSchemaCreator hyperSchemaCreator;
+    @Inject
+    private HyperSchemaCreator hyperSchemaCreator;
 
     @Context
     private UriInfo uriInfo;
-
-    @Inject
-    public RootResource(WeatherLinkCreator weatherLinkCreator, HyperSchemaCreator hyperSchemaCreator, StationsLinkCreator stationsLinkCreator) {
-        this.weatherLinkCreator = requireNonNull(weatherLinkCreator);
-        this.hyperSchemaCreator = requireNonNull(hyperSchemaCreator);
-        this.stationsLinkCreator = requireNonNull(stationsLinkCreator);
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

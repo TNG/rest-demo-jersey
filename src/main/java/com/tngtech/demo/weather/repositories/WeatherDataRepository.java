@@ -17,8 +17,12 @@ public class WeatherDataRepository {
 
     private final ConcurrentHashMap<UUID, StationDataRepository> stationDataRepositoryByStationId = new ConcurrentHashMap<>();
 
+    private final Provider<StationDataRepository> stationDataRepositoryProvider;
+
     @Inject
-    private Provider<StationDataRepository> stationDataRepositoryProvider;
+    public WeatherDataRepository(Provider<StationDataRepository> stationDataRepositoryProvider) {
+        this.stationDataRepositoryProvider = stationDataRepositoryProvider;
+    }
 
     /**
      * Update data for station with stationId, creates a new {@link StationDataRepository} if {@code stationId} is not known.
