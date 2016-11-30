@@ -1,45 +1,28 @@
 package com.tngtech.demo.weather.resources.stations;
 
-import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
-import com.mercateo.common.rest.schemagen.types.PaginatedResponseBuilderCreator;
-import com.tngtech.demo.weather.WeatherServer;
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
-import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(WeatherServer.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootTest
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StationsResourceIntegrationTest {
 
+    @Autowired
     private StationsResource stationsResource;
 
-    @Inject
+    @Autowired
     private StationRepository stationRepository;
-
-    @Inject
-    private AutowireCapableBeanFactory autowireBeanFactory;
-
-    @Before
-    public void setUp() throws Exception {
-        stationsResource = new StationsResource();
-        autowireBeanFactory.autowireBean(stationsResource);
-    }
 
     @Test
     public void getStationsShouldReturnListOfStations() {

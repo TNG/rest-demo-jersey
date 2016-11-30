@@ -1,44 +1,32 @@
 package com.tngtech.demo.weather.resources;
 
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
-import com.tngtech.demo.weather.WeatherServer;
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
-import com.tngtech.demo.weather.domain.measurement.DataPoint;
-import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
-import com.tngtech.demo.weather.resources.stations.StationsLinkCreator;
-import com.tngtech.demo.weather.resources.weather.WeatherLinkCreator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.inject.Inject;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(WeatherServer.class)
+@SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RootResourceIntegrationTest {
 
-    @Inject
-    private AutowireCapableBeanFactory autowireBeanFactory;
-
-    @Inject
+    @Autowired
     private StationRepository stationRepository;
 
+    @Autowired
     private RootResource rootResource;
 
     @Before
     public void setUp() throws Exception {
-        rootResource = new RootResource();
-        autowireBeanFactory.autowireBean(rootResource);
-
         stationRepository.addStation(WithId.create(Station.builder().name("ABC").latitude(49.0).longitude(11.0).build()));
         stationRepository.addStation(WithId.create(Station.builder().name("DEF").latitude(49.0).longitude(11.0).build()));
         stationRepository.addStation(WithId.create(Station.builder().name("GHI").latitude(49.0).longitude(11.0).build()));

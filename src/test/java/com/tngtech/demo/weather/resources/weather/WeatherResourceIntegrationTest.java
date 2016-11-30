@@ -1,8 +1,7 @@
 package com.tngtech.demo.weather.resources.weather;
 
-import com.tngtech.demo.weather.WeatherServer;
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
 import com.tngtech.demo.weather.domain.measurement.AtmosphericData;
 import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.domain.measurement.DataPointType;
@@ -10,12 +9,11 @@ import com.tngtech.demo.weather.repositories.StationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
@@ -24,19 +22,18 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(WeatherServer.class)
+@SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class WeatherResourceIntegrationTest {
 
+    @Autowired
     private WeatherResource weatherResource;
 
-    @Inject
+    @Autowired
     private StationRepository stationRepository;
 
     private DataPoint dataPoint;
 
-    @Inject
-    private AutowireCapableBeanFactory autowireBeanFactory;
     private WithId<Station> station1;
     private WithId<Station> station2;
     private WithId<Station> station3;
@@ -44,9 +41,6 @@ public class WeatherResourceIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        weatherResource = new WeatherResource();
-        autowireBeanFactory.autowireBean(weatherResource);
-
         station1 = WithId.create(Station.builder().name("ABC").latitude(49.0).longitude(11.0).build());
         stationRepository.addStation(station1);
         station2 = WithId.create(Station.builder().name("DEF").latitude(50.0).longitude(10.0).build());

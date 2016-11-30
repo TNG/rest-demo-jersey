@@ -2,18 +2,16 @@ package com.tngtech.demo.weather.resources.stations;
 
 import com.mercateo.common.rest.schemagen.JerseyResource;
 import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
-import com.tngtech.demo.weather.lib.schemagen.HyperSchemaCreator;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.repositories.WeatherDataRepository;
 import com.tngtech.demo.weather.resources.Roles;
-import com.tngtech.demo.weather.resources.weather.WeatherLinkCreator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -25,24 +23,16 @@ import java.util.UUID;
 
 import static com.tngtech.demo.weather.resources.Paths.STATION_ID;
 
+@Component
+@AllArgsConstructor
+@Slf4j
 public class StationResource implements JerseyResource {
 
-    private final static Logger log = LoggerFactory.getLogger(StationResource.class);
+    private final StationRepository stationRepository;
 
-    @Inject
-    private StationRepository stationRepository;
+    private final WeatherDataRepository weatherDataRepository;
 
-    @Inject
-    private WeatherDataRepository weatherDataRepository;
-
-    @Inject
-    private HyperSchemaCreator hyperSchemaCreator;
-
-    @Inject
-    private StationLinkCreator stationLinkCreator;
-
-    @Inject
-    private WeatherLinkCreator weatherLinkCreator;
+    private final StationHyperSchemaCreator stationHyperSchemaCreator;
 
     /**
      * Retrieve station data, including latitude and longitude for a particular station
@@ -56,16 +46,10 @@ public class StationResource implements JerseyResource {
         log.debug("getStation('{})'", stationId);
 
         return stationRepository.getStationById(stationId)
-                .map(station ->
-                        hyperSchemaCreator.create(
-                                station,
-                                stationLinkCreator.createFor(station.id),
-                                weatherLinkCreator.createForStation(station.id)
-                        )
+                .map(stationHyperSchemaCreator::create
                 ).getOrElseThrow(() ->
                         new NotFoundException("Station with id " + stationId + " was not found"));
     }
-
 
     /**
      * Remove an station from the known station list

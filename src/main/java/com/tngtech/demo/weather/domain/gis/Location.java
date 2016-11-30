@@ -1,10 +1,8 @@
 package com.tngtech.demo.weather.domain.gis;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class Location implements Point {
 
     public final double latitude;
