@@ -10,7 +10,8 @@ import javax.ws.rs.core.Link;
 import java.util.List;
 import java.util.UUID;
 
-import static com.tngtech.demo.weather.lib.OptionalUtils.collect;
+import static com.mercateo.common.rest.schemagen.util.OptionalUtil.collect;
+
 
 @Component
 public class WeatherLinkCreator {
