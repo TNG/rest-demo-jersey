@@ -26,7 +26,8 @@ public class WeatherDataRepository {
 
     /**
      * Update data for station with stationId, creates a new {@link StationDataRepository} if {@code stationId} is not known.
-     *  @param stationId id which is used to reference the station
+     *
+     * @param stationId id which is used to reference the station
      * @param data      data to be updated
      */
     public void update(UUID stationId, DataPoint data) {

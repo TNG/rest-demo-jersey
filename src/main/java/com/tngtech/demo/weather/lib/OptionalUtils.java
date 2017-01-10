@@ -9,7 +9,7 @@ public final class OptionalUtils {
 
     private OptionalUtils() {
     }
-    
+
     @SafeVarargs
     public static <T> List<T> collect(Optional<T>... optionals) {
         return Stream.of(optionals)

@@ -12,7 +12,6 @@ public class WeatherServerApplication extends ResourceConfig {
         register(JacksonFeature.class);
         //register(LoggingFilter.class);
 
-
         // Register resources and providers using package-scanning.
         final String resourceBasePackage = "com.tngtech.demo.weather.resources";
         packages(resourceBasePackage);

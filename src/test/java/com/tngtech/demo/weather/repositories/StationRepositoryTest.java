@@ -1,7 +1,7 @@
 package com.tngtech.demo.weather.repositories;
 
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 import org.junit.runner.RunWith;

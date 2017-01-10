@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-class WeatherHandler {
+class WeatherController {
 
     private static final int MILLISECONDS_PER_DAY = 86400000;
 
@@ -33,7 +33,7 @@ class WeatherHandler {
     private final TimestampFactory timestampFactory;
 
     @Inject
-    public WeatherHandler(StationRepository stationRepository, WeatherDataRepository weatherDataRepository, TimestampFactory timestampFactory, EventCounter<UUID> requestFrequency, EventCounter<Double> radiusFrequency, GeoCalculations geoCalculations) {
+    public WeatherController(StationRepository stationRepository, WeatherDataRepository weatherDataRepository, TimestampFactory timestampFactory, EventCounter<UUID> requestFrequency, EventCounter<Double> radiusFrequency, GeoCalculations geoCalculations) {
         this.stationRepository = stationRepository;
         this.weatherDataRepository = weatherDataRepository;
         this.timestampFactory = timestampFactory;

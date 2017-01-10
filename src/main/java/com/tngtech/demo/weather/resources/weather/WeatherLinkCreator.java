@@ -2,9 +2,9 @@ package com.tngtech.demo.weather.resources.weather;
 
 import com.mercateo.common.rest.schemagen.link.LinkFactory;
 import com.tngtech.demo.weather.resources.WeatherRel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.ws.rs.core.Link;
 import java.util.List;
@@ -17,7 +17,7 @@ public class WeatherLinkCreator {
 
     private final LinkFactory<WeatherResource> weatherLinkFactory;
 
-    @Inject
+    @Autowired
     public WeatherLinkCreator(@Named("weatherLinkFactory") LinkFactory<WeatherResource> weatherLinkFactory) {
         this.weatherLinkFactory = weatherLinkFactory;
     }

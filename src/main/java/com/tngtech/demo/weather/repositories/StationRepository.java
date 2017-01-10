@@ -1,15 +1,15 @@
 package com.tngtech.demo.weather.repositories;
 
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import com.tngtech.demo.weather.domain.WithId;
 import javaslang.collection.Stream;
 import javaslang.control.Option;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+@Repository
 public class StationRepository {
     private final ConcurrentHashMap<UUID, Station> stationsById = new ConcurrentHashMap<>();
 

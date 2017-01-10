@@ -7,10 +7,11 @@ import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.repositories.WeatherDataRepository;
 import com.tngtech.demo.weather.resources.Paths;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,17 +35,16 @@ import static com.tngtech.demo.weather.resources.Paths.STATISTICS;
  */
 
 @Path(Paths.WEATHER)
+@Component
+@AllArgsConstructor
+@Slf4j
 public class WeatherResource implements JerseyResource {
-    private final static Logger log = LoggerFactory.getLogger(WeatherResource.class);
 
-    @Inject
-    private StationRepository stationRepository;
+    private final StationRepository stationRepository;
 
-    @Inject
-    private WeatherDataRepository weatherDataRepository;
+    private final WeatherDataRepository weatherDataRepository;
 
-    @Inject
-    private WeatherHandler handler;
+    private final WeatherController handler;
 
     @GET
     @Path("/{" + Paths.LATITUDE + "}/{" + Paths.LONGITUDE + "}")
@@ -53,8 +53,8 @@ public class WeatherResource implements JerseyResource {
                                                         @PathParam(Paths.LONGITUDE) Double longitude,
                                                         @DefaultValue("250.0")
                                                         @QueryParam(Paths.RADIUS) Double radius) {
-        Location location = Location.builder().latitude(latitude).longitude(longitude).build();
-        javaslang.collection.List<AtmosphericData> atmosphericDatas = handler.queryWeather(location, radius);
+        val location = new Location(latitude, longitude);
+        val atmosphericDatas = handler.queryWeather(location, radius);
         return atmosphericDatas.toJavaList();
     }
 
