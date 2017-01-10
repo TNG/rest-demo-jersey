@@ -32,8 +32,8 @@
         </dependency>
         <dependency>
             <groupId>com.mercateo</groupId>
-            <artifactId>common.rest.schemagen</artifactId>
-            <version>0.18.0</version>
+            <artifactId>rest-schemagen-spring</artifactId>
+            <version>0.1.6</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
