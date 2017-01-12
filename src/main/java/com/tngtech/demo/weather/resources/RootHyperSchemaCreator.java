@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor(onConstructor = @_(@Autowired))
+@AllArgsConstructor
 class RootHyperSchemaCreator {
     private final StationsLinkCreator stationsLinkCreator;
 

@@ -7,6 +7,7 @@ import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.repositories.WeatherDataRepository;
 import com.tngtech.demo.weather.resources.Paths;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -37,6 +38,7 @@ import static com.tngtech.demo.weather.resources.Paths.STATISTICS;
 @Path(Paths.WEATHER)
 @Component
 @AllArgsConstructor
+@Api(value = Paths.WEATHER, description = "weather resource")
 @Slf4j
 public class WeatherResource implements JerseyResource {
 

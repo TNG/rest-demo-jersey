@@ -1,28 +1,38 @@
 package com.tngtech.demo.weather.resources.stations;
 
 import com.mercateo.common.rest.schemagen.JerseyResource;
-import com.mercateo.common.rest.schemagen.types.*;
+import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
+import com.mercateo.common.rest.schemagen.types.PaginatedList;
+import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
+import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.resources.Paths;
 import com.tngtech.demo.weather.resources.Roles;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.*;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import static java.util.Objects.requireNonNull;
 
-@Path(Paths.STATIONS)
+//@Path(Paths.STATIONS)
+@Path("/test")
 @AllArgsConstructor
 @Component
+@Api(value = Paths.STATIONS, description = "stations resource")
+@Slf4j
 public class StationsResource implements JerseyResource {
-    private static final Logger log = LoggerFactory.getLogger(StationsResource.class);
 
     private final StationRepository stationRepository;
 

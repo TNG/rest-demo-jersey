@@ -7,7 +7,7 @@ import requests
 
 headers={'content-type': 'application/json'}
 
-base_url = "http://localhost:9090"
+base_url = "http://localhost:9090/api"
 
 def dump_links(response):
     for link in response['_schema']['links']:
@@ -27,7 +27,7 @@ do_request('GET', base_url)
 
 print()
 print("*** get stations")
-stations = do_request('GET', base_url + '/stations')
+stations = do_request('GET', base_url + '/test')
 for station in stations['members']:
   print("   ", station['name'], station['longitude'], station['latitude'], station['id'])
 

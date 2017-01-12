@@ -1,4 +1,4 @@
-package com.tngtech.demo.weather;
+package com.tngtech.demo.weather.resources.config;
 
 import com.mercateo.common.rest.schemagen.link.LinkFactory;
 import com.mercateo.common.rest.schemagen.link.LinkMetaFactory;
@@ -9,6 +9,8 @@ import com.tngtech.demo.weather.resources.stations.StationResource;
 import com.tngtech.demo.weather.resources.stations.StationsResource;
 import com.tngtech.demo.weather.resources.weather.WeatherResource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.jetty.JettyEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -18,7 +20,7 @@ import javax.inject.Named;
 @Configuration
 @Slf4j
 @Import(JerseyHateoasConfiguration.class)
-public class WeatherServerConfiguration {
+public class RestConfiguration {
 
     @Bean
     public FieldCheckerForSchema fieldCheckerForSchema() {
@@ -48,5 +50,12 @@ public class WeatherServerConfiguration {
     @Named("weatherLinkFactory")
     LinkFactory<WeatherResource> weatherResourceLinkFactory(LinkMetaFactory linkMetaFactory) {
         return linkMetaFactory.createFactoryFor(WeatherResource.class);
+    }
+
+    @Bean
+    EmbeddedServletContainerFactory containerFactory() {
+        final JettyEmbeddedServletContainerFactory jettyEmbeddedServletContainerFactory = new JettyEmbeddedServletContainerFactory();
+        jettyEmbeddedServletContainerFactory.addServerCustomizers(new JettyConfigurer());
+        return jettyEmbeddedServletContainerFactory;
     }
 }
