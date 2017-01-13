@@ -81,7 +81,6 @@ public class StationsResource implements JerseyResource {
 
     @Path("/{" + Paths.STATION_ID + "}")
     public Class<StationResource> stationSubResource() {
-        log.trace("stationSubResource()");
         return StationResource.class;
     }
 }

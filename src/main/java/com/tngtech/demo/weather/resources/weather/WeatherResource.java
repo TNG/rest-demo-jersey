@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -49,14 +50,10 @@ public class WeatherResource implements JerseyResource {
     private final WeatherController handler;
 
     @GET
-    @Path("/{" + Paths.LATITUDE + "}/{" + Paths.LONGITUDE + "}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<AtmosphericData> queryWeatherByLocation(@PathParam(Paths.LATITUDE) Double latitude,
-                                                        @PathParam(Paths.LONGITUDE) Double longitude,
-                                                        @DefaultValue("250.0")
-                                                        @QueryParam(Paths.RADIUS) Double radius) {
-        val location = new Location(latitude, longitude);
-        val atmosphericDatas = handler.queryWeather(location, radius);
+    public List<AtmosphericData> queryWeatherByLocation(@BeanParam WeatherQueryParam queryParam) {
+        val location = new Location(queryParam.latitude, queryParam.longitude);
+        val atmosphericDatas = handler.queryWeather(location, queryParam.radius);
         return atmosphericDatas.toJavaList();
     }
 

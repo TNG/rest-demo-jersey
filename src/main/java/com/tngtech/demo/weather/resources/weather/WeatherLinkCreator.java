@@ -1,7 +1,10 @@
 package com.tngtech.demo.weather.resources.weather;
 
 import com.mercateo.common.rest.schemagen.link.LinkFactory;
+import com.mercateo.common.rest.schemagen.parameter.CallContext;
+import com.mercateo.common.rest.schemagen.parameter.Parameter;
 import com.tngtech.demo.weather.resources.WeatherRel;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +27,12 @@ public class WeatherLinkCreator {
     }
 
     public List<Link> create() {
+        val callContext = CallContext.create();
+        val weatherQueryParam = callContext.builderFor(WeatherQueryParam.class).defaultValue(new WeatherQueryParam(null, null, 250.0)).build();
+
         return collect(
                 weatherLinkFactory.forCall(WeatherRel.STATISTICS, WeatherResource::getStatistics),
-                weatherLinkFactory.forCall(WeatherRel.QUERY, r -> r.queryWeatherByLocation(49.0, 11.0, null))
+                weatherLinkFactory.forCall(WeatherRel.QUERY, r -> r.queryWeatherByLocation(weatherQueryParam.get()))
         );
     }
 

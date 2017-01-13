@@ -46,4 +46,11 @@ public class StationsResourceIntegrationTest {
         assertThat(station.longitude()).isEqualTo(11);
     }
 
+    @Test
+    public void getSubresource() {
+        final Class<StationResource> stationResourceClass = stationsResource.stationSubResource();
+
+        assertThat(stationResourceClass).isNotNull();
+    }
+
 }
