@@ -9,7 +9,7 @@ Spring-boot and Jersey based REST service showing the integration of [rest-schem
 
 ## Start instructions
 
- * run service`
+ * run service
 
    ``` mvn spring-boot:run ```
    
