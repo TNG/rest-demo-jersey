@@ -27,7 +27,7 @@ do_request('GET', base_url)
 
 print()
 print("*** get stations")
-stations = do_request('GET', base_url + '/test')
+stations = do_request('GET', base_url + '/stations')
 for station in stations['members']:
   print("   ", station['name'], station['longitude'], station['latitude'], station['id'])
 

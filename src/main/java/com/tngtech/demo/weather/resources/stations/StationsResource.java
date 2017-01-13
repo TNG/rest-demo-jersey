@@ -26,8 +26,7 @@ import javax.ws.rs.core.MediaType;
 
 import static java.util.Objects.requireNonNull;
 
-//@Path(Paths.STATIONS)
-@Path("/test")
+@Path(Paths.STATIONS)
 @AllArgsConstructor
 @Component
 @Api(value = Paths.STATIONS, description = "stations resource")
