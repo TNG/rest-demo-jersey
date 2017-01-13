@@ -7,24 +7,32 @@ Spring-boot and Jersey based REST service showing the integration of [rest-schem
 
 <img src="https://rawgit.com/TNG/rest-demo-jersey/master/doc/service.svg" alt="service schematics">
 
+## Start instructions
+
+ * run service`
+
+   ``` mvn spring-boot:run ```
+   
+ * the Swagger UI can be found on http://localhost:9090/
+ * REST API is available at http://localhost:9090/api/
+    
 ## Example usage
 
-### get base info
-GET: http://localhost:9090
+### Get base info
+GET: http://localhost:9090/api
 
-* stations: GET /stations 
-* statistics: GET /weather/statistics 
-* query: GET /weather/49.0/11.0 
+* stations: GET /api/stations 
+* statistics: GET /api/weather/statistics 
+* query: GET /api/weather/49.0/11.0 
 
-### get stations
-GET: http://localhost:9090/stations
+### Create station
+POST: http://localhost:9090/api/stations
 
-* create: POST /stations {u'type': u'object', u'properties': {u'latitude': {u'type': u'number'}, u'name': {u'type': u'string'}, u'longitude': {u'type': u'number'}}}
-* self: GET /stations?offset=0&limit=100 
+* self: GET /api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
+* delete: DELETE /api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3
 
-### create station
-POST: http://localhost:9090/stations
+### Get stations
+GET: http://localhost:9090/api/stations
 
-* self: GET /stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
-* delete: DELETE /stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
-    
+* create: POST /api/stations {u'type': u'object', u'properties': {u'latitude': {u'type': u'number'}, u'name': {u'type': u'string'}, u'longitude': {u'type': u'number'}}}
+* self: GET /api/stations?offset=0&limit=100 
