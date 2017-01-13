@@ -86,7 +86,6 @@ class WeatherController {
     }
 
     List<AtmosphericData> queryWeather(Point location, Double radius) {
-        // TODO implement
         return List.empty();
     }
 

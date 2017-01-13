@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -112,5 +113,10 @@ public class WeatherResourceIntegrationTest {
         assertThat(response.getStatus()).isEqualTo(406);
     }
 
+    @Test
+    public void queryWeatherByLocation() throws Exception {
+        final List<AtmosphericData> atmosphericDatas = weatherResource.queryWeatherByLocation(new WeatherQueryParam(49.0, 11.0, 500.0));
 
+        assertThat(atmosphericDatas).isEmpty();
+    }
 }
