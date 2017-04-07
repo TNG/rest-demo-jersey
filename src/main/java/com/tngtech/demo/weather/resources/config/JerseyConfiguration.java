@@ -36,7 +36,7 @@ public class JerseyConfiguration extends ResourceConfig {
         beanConfig.setHost("localhost:9090");
         beanConfig.setBasePath("/api");
         beanConfig.setResourcePackage(RESOURCE_BASE_PACKAGE);
-        beanConfig.setScan(true);
+        //beanConfig.setScan(true);
 
         register(ApiListingResource.class);
         register(SwaggerSerializers.class);
