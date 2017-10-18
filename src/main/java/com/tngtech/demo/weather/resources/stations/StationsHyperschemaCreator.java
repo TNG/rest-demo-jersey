@@ -1,11 +1,6 @@
 package com.tngtech.demo.weather.resources.stations;
 
-import com.mercateo.common.rest.schemagen.types.HyperSchemaCreator;
-import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
-import com.mercateo.common.rest.schemagen.types.PaginatedList;
-import com.mercateo.common.rest.schemagen.types.PaginatedResponse;
-import com.mercateo.common.rest.schemagen.types.PaginatedResponseBuilderCreator;
-import com.mercateo.common.rest.schemagen.types.WithId;
+import com.mercateo.common.rest.schemagen.types.*;
 import com.tngtech.demo.weather.domain.Station;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

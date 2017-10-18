@@ -15,6 +15,6 @@ import java.net.URISyntaxException;
 public class WeatherServerTestConfiguration {
     @Bean
     LinkFactoryContext linkFactoryContext() throws URISyntaxException {
-        return new LinkFactoryContextDefault(new URI("http://host/path"), x -> true, (x,y) -> true);
+        return new LinkFactoryContextDefault(new URI("http://host/path"), x -> true, (x, y) -> true);
     }
 }

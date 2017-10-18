@@ -2,7 +2,6 @@ package com.tngtech.demo.weather.resources.weather;
 
 import com.mercateo.common.rest.schemagen.link.LinkFactory;
 import com.mercateo.common.rest.schemagen.parameter.CallContext;
-import com.mercateo.common.rest.schemagen.parameter.Parameter;
 import com.tngtech.demo.weather.resources.WeatherRel;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;

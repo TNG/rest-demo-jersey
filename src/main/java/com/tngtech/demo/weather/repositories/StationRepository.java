@@ -2,8 +2,8 @@ package com.tngtech.demo.weather.repositories;
 
 import com.mercateo.common.rest.schemagen.types.WithId;
 import com.tngtech.demo.weather.domain.Station;
-import javaslang.collection.Stream;
-import javaslang.control.Option;
+import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;

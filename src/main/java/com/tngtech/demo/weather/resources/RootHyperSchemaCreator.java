@@ -5,7 +5,6 @@ import com.mercateo.common.rest.schemagen.types.ObjectWithSchema;
 import com.tngtech.demo.weather.resources.stations.StationsLinkCreator;
 import com.tngtech.demo.weather.resources.weather.WeatherLinkCreator;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

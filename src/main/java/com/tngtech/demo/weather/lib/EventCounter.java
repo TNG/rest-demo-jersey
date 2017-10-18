@@ -1,11 +1,11 @@
 package com.tngtech.demo.weather.lib;
 
-import javaslang.Tuple;
-import javaslang.Tuple2;
-import javaslang.collection.HashSet;
-import javaslang.collection.Set;
-import javaslang.collection.Stream;
-import javaslang.control.Option;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
+import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

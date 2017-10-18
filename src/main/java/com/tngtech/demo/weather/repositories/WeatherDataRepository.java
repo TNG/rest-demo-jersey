@@ -2,9 +2,9 @@ package com.tngtech.demo.weather.repositories;
 
 import com.tngtech.demo.weather.domain.measurement.AtmosphericData;
 import com.tngtech.demo.weather.domain.measurement.DataPoint;
-import javaslang.collection.Seq;
-import javaslang.collection.Stream;
-import javaslang.control.Option;
+import io.vavr.collection.Seq;
+import io.vavr.collection.Stream;
+import io.vavr.control.Option;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

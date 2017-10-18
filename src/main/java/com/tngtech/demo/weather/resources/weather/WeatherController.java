@@ -7,7 +7,7 @@ import com.tngtech.demo.weather.lib.GeoCalculations;
 import com.tngtech.demo.weather.lib.TimestampFactory;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.repositories.WeatherDataRepository;
-import javaslang.collection.List;
+import io.vavr.collection.List;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;

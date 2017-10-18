@@ -3,7 +3,7 @@ package com.tngtech.demo.weather.repositories;
 import com.tngtech.demo.weather.domain.measurement.AtmosphericData;
 import com.tngtech.demo.weather.domain.measurement.DataPoint;
 import com.tngtech.demo.weather.domain.measurement.DataPointType;
-import javaslang.control.Option;
+import io.vavr.control.Option;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
