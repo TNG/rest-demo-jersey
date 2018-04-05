@@ -9,7 +9,6 @@ import com.tngtech.demo.weather.domain.Station;
 import com.tngtech.demo.weather.repositories.StationRepository;
 import com.tngtech.demo.weather.resources.Paths;
 import com.tngtech.demo.weather.resources.Roles;
-import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -24,7 +23,6 @@ import static java.util.Objects.requireNonNull;
 @Path(Paths.STATIONS)
 @AllArgsConstructor
 @Component
-@Api(value = Paths.STATIONS, description = "stations resource")
 @Slf4j
 public class StationsResource implements JerseyResource {
 

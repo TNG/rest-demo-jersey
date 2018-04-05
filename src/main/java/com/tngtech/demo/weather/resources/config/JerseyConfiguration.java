@@ -3,9 +3,6 @@ package com.tngtech.demo.weather.resources.config;
 import com.tngtech.demo.weather.resources.RootResource;
 import com.tngtech.demo.weather.resources.stations.StationsResource;
 import com.tngtech.demo.weather.resources.weather.WeatherResource;
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jaxrs.listing.ApiListingResource;
-import io.swagger.jaxrs.listing.SwaggerSerializers;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -29,16 +26,5 @@ public class JerseyConfiguration extends ResourceConfig {
         register(RootResource.class);
         register(StationsResource.class);
         register(WeatherResource.class);
-
-        BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0.0");
-        beanConfig.setSchemes(new String[]{"http"});
-        beanConfig.setHost("localhost:9090");
-        beanConfig.setBasePath("/api");
-        beanConfig.setResourcePackage(RESOURCE_BASE_PACKAGE);
-        //beanConfig.setScan(true);
-
-        register(ApiListingResource.class);
-        register(SwaggerSerializers.class);
     }
 }
