@@ -51,11 +51,4 @@ public class RestConfiguration {
     LinkFactory<WeatherResource> weatherResourceLinkFactory(LinkMetaFactory linkMetaFactory) {
         return linkMetaFactory.createFactoryFor(WeatherResource.class);
     }
-
-    @Bean
-    EmbeddedServletContainerFactory containerFactory() {
-        final JettyEmbeddedServletContainerFactory jettyEmbeddedServletContainerFactory = new JettyEmbeddedServletContainerFactory();
-        jettyEmbeddedServletContainerFactory.addServerCustomizers(new JettyConfigurer());
-        return jettyEmbeddedServletContainerFactory;
-    }
 }
