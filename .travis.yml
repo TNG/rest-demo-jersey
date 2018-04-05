@@ -3,6 +3,3 @@ install: "mvn install -DskipTests=true"
 script: "mvn -e clean test jacoco:report coveralls:report"
 jdk:
   - oraclejdk8
-addons:
-  srcclr: true
-
