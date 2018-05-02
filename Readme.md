@@ -19,20 +19,29 @@ Spring-boot and Jersey based REST service showing the integration of [rest-schem
 ## Example usage
 
 ### Get base info
-GET: http://localhost:9090/api
+GET: `http://localhost:9090/api`
 
-* stations: GET /api/stations 
-* statistics: GET /api/weather/statistics 
-* query: GET /api/weather/49.0/11.0 
+* stations: GET `/api/stations`
+* statistics: GET `/api/weather/statistics`
+* query: GET `/api/weather/49.0/11.0`
 
 ### Create station
-POST: http://localhost:9090/api/stations
+POST: `http://localhost:9090/api/stations`
 
-* self: GET /api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3 
-* delete: DELETE /api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3
-
+* self: GET `/api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3`
+* delete: DELETE `/api/stations/d6b4cf17-144c-443d-8ca3-2ed2bc371ef3`
 ### Get stations
-GET: http://localhost:9090/api/stations
+GET: `http://localhost:9090/api/stations`
 
-* create: POST /api/stations {u'type': u'object', u'properties': {u'latitude': {u'type': u'number'}, u'name': {u'type': u'string'}, u'longitude': {u'type': u'number'}}}
-* self: GET /api/stations?offset=0&limit=100 
+  * create: POST `/api/stations`
+
+    Payload:
+     ```$javascript
+     {'type': 'object', 'properties': {'latitude': {'type': 'number'}, 'name': {'type': 'string'}, 'longitude': {'type': 'number'}}}
+     ```
+  
+  * self: GET `/api/stations?offset=0&limit=100` 
+
+# License
+
+rest-demo-jersey is published under the Apache License 2.0, see http://www.apache.org/licenses/LICENSE-2.0 for details.
